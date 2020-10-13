@@ -18,14 +18,13 @@ func (es *Elfsquad) GetFeatures() (*[]Feature, error) {
 	top := 100
 	skip := 0
 
-	url := fmt.Sprintf("%s/features?$top=%v&$skip=%v", apiURLData, top, skip)
-	//fmt.Println(url)
-
 	features := []Feature{}
 
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
+		url := fmt.Sprintf("%s/features?$top=%v&$skip=%v", apiURLData, top, skip)
+
 		featuresReponse := FeaturesResponse{}
 
 		_, err := es.oAuth2.Get(url, &featuresReponse)

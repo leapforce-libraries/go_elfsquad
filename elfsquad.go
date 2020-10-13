@@ -9,24 +9,37 @@ import (
 )
 
 const (
-	apiName         string = "Elfsquad"
-	apiURLData      string = "https://api.elfsquad.io/data/1"
-	apiURL          string = "https://api.elfsquad.io/api/2"
-	tokenURL        string = "https://api.elfsquad.io/api/2/auth/elfskotconnectlogin"
-	tokenHTTPMethod string = http.MethodPost
+	apiName           string = "Elfsquad"
+	apiURLData        string = "https://api.elfsquad.io/data/1"
+	apiURL            string = "https://api.elfsquad.io/api/2"
+	accessTokenURL    string = "https://api.elfsquad.io/api/2/auth/elfskotconnectlogin"
+	accessTokenMethod string = http.MethodPost
 )
 
 // Elfsquad stores Elfsquad configuration
 //
 type Elfsquad struct {
-	oAuth2 *oauth2.OAuth2
+	clientID string
+	secret   string
+	oAuth2   *oauth2.OAuth2
 }
 
 // methods
 //
-func NewElfsquad(clientID string, clientSecret string, scope string, bigQuery *bigquerytools.BigQuery, isLive bool) (*Elfsquad, error) {
-	es := Elfsquad{}
-	es.oAuth2 = oauth2.NewOAuth(apiName, clientID, clientSecret, scope, "", "", tokenURL, tokenHTTPMethod, bigQuery, isLive)
+func NewElfsquad(clientID string, secret string, bigQuery *bigquerytools.BigQuery, isLive bool) (*Elfsquad, error) {
+	es := Elfsquad{clientID: clientID, secret: secret}
+
+	tokenFunction := func() (*oauth2.Token, error) {
+		return es.GetAccessToken()
+	}
+
+	config := oauth2.OAuth2Config{
+		ApiName:       apiName,
+		ClientID:      clientID,
+		ClientSecret:  secret,
+		TokenFunction: &tokenFunction,
+	}
+	es.oAuth2 = oauth2.NewOAuth(config, bigQuery, isLive)
 	return &es, nil
 }
 
