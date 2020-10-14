@@ -2,6 +2,7 @@ package elfsquad
 
 import (
 	"net/http"
+	"time"
 
 	bigquerytools "github.com/Leapforce-nl/go_bigquerytools"
 
@@ -45,4 +46,15 @@ func NewElfsquad(clientID string, secret string, bigQuery *bigquerytools.BigQuer
 
 func (es *Elfsquad) ValidateToken() (*oauth2.Token, error) {
 	return es.oAuth2.ValidateToken()
+}
+
+func ParseDateString(date string) *time.Time {
+	if len(date) >= 19 {
+		d, err := time.Parse("2006-01-02T15:04:05", date[:19])
+		if err == nil {
+			return &d
+		}
+	}
+
+	return nil
 }

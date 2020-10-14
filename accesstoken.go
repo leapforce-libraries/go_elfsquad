@@ -28,8 +28,6 @@ func (es *Elfsquad) GetAccessToken() (*oauth2.Token, error) {
 	data["clientId"] = es.clientID
 	data["secret"] = es.secret
 
-	fmt.Println(data)
-
 	dataByte, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
@@ -79,8 +77,6 @@ func (es *Elfsquad) GetAccessToken() (*oauth2.Token, error) {
 		AccessToken: &accessToken.AccessToken,
 		ExpiresIn:   &expiresInJson,
 	}
-
-	fmt.Println(token)
 
 	return &token, nil
 }
