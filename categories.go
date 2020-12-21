@@ -3,7 +3,8 @@ package elfsquad
 import (
 	"fmt"
 
-	types "github.com/Leapforce-nl/go_types"
+	errortools "github.com/leapforce-libraries/go_errortools"
+	types "github.com/leapforce-libraries/go_types"
 )
 
 type CategoriesResponse struct {
@@ -23,7 +24,7 @@ type Category struct {
 	CreatorID      types.GUID `json:"creatorId"`
 }
 
-func (es *Elfsquad) GetCategories() (*[]Category, error) {
+func (es *Elfsquad) GetCategories() (*[]Category, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -36,9 +37,9 @@ func (es *Elfsquad) GetCategories() (*[]Category, error) {
 
 		categoriesReponse := CategoriesResponse{}
 
-		_, err := es.oAuth2.Get(url, &categoriesReponse)
-		if err != nil {
-			return nil, err
+		_, _, e := es.oAuth2.Get(url, &categoriesReponse, nil)
+		if e != nil {
+			return nil, e
 		}
 
 		rowCount = len(categoriesReponse.Value)

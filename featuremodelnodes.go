@@ -3,7 +3,8 @@ package elfsquad
 import (
 	"fmt"
 
-	types "github.com/Leapforce-nl/go_types"
+	errortools "github.com/leapforce-libraries/go_errortools"
+	types "github.com/leapforce-libraries/go_types"
 )
 
 type FeatureModelNodesResponse struct {
@@ -40,7 +41,7 @@ type FeatureModelNode struct {
 	UpdatedDate                  string     `json:"updatedDate"`
 }
 
-func (es *Elfsquad) GetFeatureModelNodes() (*[]FeatureModelNode, error) {
+func (es *Elfsquad) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -53,9 +54,9 @@ func (es *Elfsquad) GetFeatureModelNodes() (*[]FeatureModelNode, error) {
 
 		featureModelNodesReponse := FeatureModelNodesResponse{}
 
-		_, err := es.oAuth2.Get(url, &featureModelNodesReponse)
-		if err != nil {
-			return nil, err
+		_, _, e := es.oAuth2.Get(url, &featureModelNodesReponse, nil)
+		if e != nil {
+			return nil, e
 		}
 
 		rowCount = len(featureModelNodesReponse.Value)
