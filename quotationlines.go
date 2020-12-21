@@ -55,7 +55,7 @@ func (es *Elfsquad) GetQuotationLines() (*[]QuotationLine, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/quotationlines?$top=%v&$skip=%v", apiURLData, top, skip)
+		url := fmt.Sprintf("%s/quotationlines?$top=%v&$skip=%v", APIURLData, top, skip)
 
 		quotationLinesReponse := QuotationLinesResponse{}
 

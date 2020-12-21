@@ -33,7 +33,7 @@ func (es *Elfsquad) GetCategories() (*[]Category, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/categories?$top=%v&$skip=%v", apiURLData, top, skip)
+		url := fmt.Sprintf("%s/categories?$top=%v&$skip=%v", APIURLData, top, skip)
 
 		categoriesReponse := CategoriesResponse{}
 

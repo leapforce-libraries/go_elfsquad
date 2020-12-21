@@ -44,7 +44,7 @@ func (es *Elfsquad) GetFeatures() (*[]Feature, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/features?$top=%v&$skip=%v", apiURLData, top, skip)
+		url := fmt.Sprintf("%s/features?$top=%v&$skip=%v", APIURLData, top, skip)
 
 		featuresReponse := FeaturesResponse{}
 

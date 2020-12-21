@@ -1,11 +1,13 @@
 package elfsquad
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
@@ -14,50 +16,51 @@ import (
 // Token stures Token object
 //
 type AccessToken struct {
-	AccessToken string `json:"accessToken"`
-	ExpiresIn   int    `json:"expiresIn"`
-	//ExpiresIn   json.RawMessage `json:"expiresIn"`
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
+	TokenType   string `json:"token_type"`
+	Scope       string `json:"scope"`
 }
 
 func (es *Elfsquad) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 	client := new(http.Client)
 
-	urlString := accessTokenURL
+	urlString := AccessTokenURL
 
-	data := make(map[string]string)
-	data["clientId"] = es.clientID
-	data["secret"] = es.secret
+	data := url.Values{}
+	data.Set("client_id", es.clientID)
+	data.Set("client_secret", es.clientSecret)
+	data.Set("grant_type", AccessTokenGrantType)
+	data.Set("scope", AccessTokenScope)
 
-	dataByte, err := json.Marshal(data)
+	e := new(errortools.Error)
+
+	request, err := http.NewRequest(AccessTokenMethod, urlString, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, errortools.ErrorMessage(err)
 	}
+	e.SetRequest(request)
 
-	request, err := http.NewRequest(accessTokenMethod, urlString, bytes.NewReader(dataByte))
-	if err != nil {
-		return nil, errortools.ErrorMessage(err)
-	}
-	request.Header.Set("Accept", "application/json")
-	request.Header.Set("Content-Type", "application/json")
+	request.Header.Add("Accept", "application/json")
+	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 
 	// Send out the HTTP request
 	response, err := client.Do(request)
 
 	// Check HTTP StatusCode
 	if response.StatusCode < 200 || response.StatusCode > 299 {
-		fmt.Println(fmt.Sprintf("ERROR in %s", accessTokenMethod))
+		fmt.Println(fmt.Sprintf("ERROR in %s", AccessTokenMethod))
 		fmt.Println("url", urlString)
 		fmt.Println("StatusCode", response.StatusCode)
 
-		e := new(errortools.Error)
-		e = new(errortools.Error)
-		e.SetRequest(request)
 		e.SetResponse(response)
-
 		e.SetMessage(fmt.Sprintf("Server returned statuscode %v", response.StatusCode))
-	}
-	if err != nil {
-		return nil, errortools.ErrorMessage(err)
+		return nil, e
+	} else if err != nil {
+		e.SetResponse(response)
+		e.SetMessage(err)
+		return nil, e
 	}
 
 	defer response.Body.Close()
@@ -66,20 +69,23 @@ func (es *Elfsquad) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 
 	b, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, errortools.ErrorMessage(err)
+		e.SetMessage(err)
+		return nil, e
 	}
 
 	err = json.Unmarshal(b, &accessToken)
 	if err != nil {
-		return nil, errortools.ErrorMessage(err)
+		e.SetMessage(err)
+		return nil, e
 	}
 
-	expiresIn, _ := json.Marshal(accessToken.ExpiresIn / 1000)
+	expiresIn, _ := json.Marshal(accessToken.ExpiresIn)
 	expiresInJson := json.RawMessage(expiresIn)
 
 	token := oauth2.Token{
 		AccessToken: &accessToken.AccessToken,
 		ExpiresIn:   &expiresInJson,
+		TokenType:   &accessToken.TokenType,
 	}
 
 	return &token, nil

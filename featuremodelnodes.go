@@ -50,7 +50,7 @@ func (es *Elfsquad) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools.Err
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/featuremodelnodes?$top=%v&$skip=%v", apiURLData, top, skip)
+		url := fmt.Sprintf("%s/featuremodelnodes?$top=%v&$skip=%v", APIURLData, top, skip)
 
 		featureModelNodesReponse := FeatureModelNodesResponse{}
 
