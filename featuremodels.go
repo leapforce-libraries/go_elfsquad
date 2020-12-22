@@ -36,11 +36,10 @@ func (es *Elfsquad) GetFeatureModels() (*[]FeatureModel, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/featuremodels?$top=%v&$skip=%v", APIURLData, top, skip)
+		urlPath := fmt.Sprintf("featuremodels?$top=%v&$skip=%v", top, skip)
 
 		featureModelsReponse := FeatureModelsResponse{}
-
-		_, _, e := es.oAuth2.Get(url, &featureModelsReponse, nil)
+		_, _, e := es.get(urlPath, &featureModelsReponse)
 		if e != nil {
 			return nil, e
 		}

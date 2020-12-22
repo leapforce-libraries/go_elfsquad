@@ -50,11 +50,10 @@ func (es *Elfsquad) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools.Err
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/featuremodelnodes?$top=%v&$skip=%v", APIURLData, top, skip)
+		urlPath := fmt.Sprintf("featuremodelnodes?$top=%v&$skip=%v", top, skip)
 
 		featureModelNodesReponse := FeatureModelNodesResponse{}
-
-		_, _, e := es.oAuth2.Get(url, &featureModelNodesReponse, nil)
+		_, _, e := es.get(urlPath, &featureModelNodesReponse)
 		if e != nil {
 			return nil, e
 		}

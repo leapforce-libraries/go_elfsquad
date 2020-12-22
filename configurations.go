@@ -36,11 +36,10 @@ func (es *Elfsquad) GetConfigurations() (*[]Configuration, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/configurations?$top=%v&$skip=%v", APIURLData, top, skip)
+		urlPath := fmt.Sprintf("configurations?$top=%v&$skip=%v", top, skip)
 
 		configurationsReponse := ConfigurationsResponse{}
-
-		_, _, e := es.oAuth2.Get(url, &configurationsReponse, nil)
+		_, _, e := es.get(urlPath, &configurationsReponse)
 		if e != nil {
 			return nil, e
 		}

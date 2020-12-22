@@ -55,11 +55,10 @@ func (es *Elfsquad) GetQuotationLines() (*[]QuotationLine, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/quotationlines?$top=%v&$skip=%v", APIURLData, top, skip)
+		urlPath := fmt.Sprintf("quotationlines?$top=%v&$skip=%v", top, skip)
 
 		quotationLinesReponse := QuotationLinesResponse{}
-
-		_, _, e := es.oAuth2.Get(url, &quotationLinesReponse, nil)
+		_, _, e := es.get(urlPath, &quotationLinesReponse)
 		if e != nil {
 			return nil, e
 		}

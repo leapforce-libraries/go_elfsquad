@@ -44,11 +44,10 @@ func (es *Elfsquad) GetFeatures() (*[]Feature, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/features?$top=%v&$skip=%v", APIURLData, top, skip)
+		urlPath := fmt.Sprintf("features?$top=%v&$skip=%v", top, skip)
 
 		featuresReponse := FeaturesResponse{}
-
-		_, _, e := es.oAuth2.Get(url, &featuresReponse, nil)
+		_, _, e := es.get(urlPath, &featuresReponse)
 		if e != nil {
 			return nil, e
 		}

@@ -33,11 +33,10 @@ func (es *Elfsquad) GetCategories() (*[]Category, *errortools.Error) {
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		url := fmt.Sprintf("%s/categories?$top=%v&$skip=%v", APIURLData, top, skip)
+		urlPath := fmt.Sprintf("categories?$top=%v&$skip=%v", top, skip)
 
 		categoriesReponse := CategoriesResponse{}
-
-		_, _, e := es.oAuth2.Get(url, &categoriesReponse, nil)
+		_, _, e := es.get(urlPath, &categoriesReponse)
 		if e != nil {
 			return nil, e
 		}
