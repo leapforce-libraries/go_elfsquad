@@ -69,8 +69,10 @@ func (es *Elfsquad) GetQuotations(params *GetQuotationsParams) (*[]Quotation, *e
 		if len(filter) > 0 {
 			urlPath = fmt.Sprintf("%s&$filter=%s", urlPath, url.QueryEscape(strings.Join(filter, " AND ")))
 		}
-		if params.Select != nil {
-			urlPath = fmt.Sprintf("%s&$select=%s", urlPath, strings.Join(*params.Select, ","))
+		if params != nil {
+			if params.Select != nil {
+				urlPath = fmt.Sprintf("%s&$select=%s", urlPath, strings.Join(*params.Select, ","))
+			}
 		}
 
 		quotationsReponse := QuotationsResponse{}
