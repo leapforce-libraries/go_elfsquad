@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	bigquerytools "github.com/leapforce-libraries/go_bigquerytools"
 	errortools "github.com/leapforce-libraries/go_errortools"
+	google "github.com/leapforce-libraries/go_google"
 
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
 )
@@ -32,7 +32,7 @@ type Elfsquad struct {
 
 // methods
 //
-func NewElfsquad(clientID string, clientSecret string, bigQuery *bigquerytools.BigQuery) (*Elfsquad, *errortools.Error) {
+func NewElfsquad(clientID string, clientSecret string, bigQuery *google.BigQuery) (*Elfsquad, *errortools.Error) {
 	es := Elfsquad{clientID: clientID, clientSecret: clientSecret}
 
 	tokenFunction := func() (*oauth2.Token, *errortools.Error) {
@@ -40,12 +40,11 @@ func NewElfsquad(clientID string, clientSecret string, bigQuery *bigquerytools.B
 	}
 
 	config := oauth2.OAuth2Config{
-		APIName:       APIName,
-		ClientID:      clientID,
-		ClientSecret:  clientSecret,
-		TokenFunction: &tokenFunction,
+		ClientID:         clientID,
+		ClientSecret:     clientSecret,
+		NewTokenFunction: &tokenFunction,
 	}
-	es.oAuth2 = oauth2.NewOAuth(config, bigQuery)
+	es.oAuth2 = oauth2.NewOAuth(config)
 	return &es, nil
 }
 
