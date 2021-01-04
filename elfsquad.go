@@ -1,7 +1,6 @@
 package elfsquad
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -99,52 +98,9 @@ func (es *Elfsquad) httpRequest(httpMethod string, urlPath string, bodyModel int
 
 	e := new(errortools.Error)
 
-	buffer := new(bytes.Buffer)
-	buffer = nil
-
-	if bodyModel != nil {
-
-		b, err := json.Marshal(bodyModel)
-		if err != nil {
-			e.SetMessage(err)
-			return nil, nil, e
-		}
-		buffer = bytes.NewBuffer(b)
-	}
-
 	errorResponse := ErrorResponse{}
 
-	request, response, e := func() (*http.Request, *http.Response, *errortools.Error) {
-		if httpMethod == http.MethodGet {
-			return es.oAuth2.Get(url, responseModel, &errorResponse)
-		} else if httpMethod == http.MethodPost {
-			if buffer == nil {
-				return es.oAuth2.Post(url, nil, responseModel, &errorResponse)
-			} else {
-				return es.oAuth2.Post(url, buffer, responseModel, &errorResponse)
-			}
-		} else if httpMethod == http.MethodPut {
-			if buffer == nil {
-				return es.oAuth2.Put(url, nil, responseModel, &errorResponse)
-			} else {
-				return es.oAuth2.Put(url, buffer, responseModel, &errorResponse)
-			}
-		} else if httpMethod == http.MethodPatch {
-			if buffer == nil {
-				return es.oAuth2.Patch(url, nil, responseModel, &errorResponse)
-			} else {
-				return es.oAuth2.Patch(url, buffer, responseModel, &errorResponse)
-			}
-		} else if httpMethod == http.MethodDelete {
-			if buffer == nil {
-				return es.oAuth2.Delete(url, nil, responseModel, &errorResponse)
-			} else {
-				return es.oAuth2.Delete(url, buffer, responseModel, &errorResponse)
-			}
-		}
-
-		return nil, nil, nil
-	}()
+	request, response, e := es.oAuth2.HTTP(httpMethod, url, bodyModel, responseModel, &errorResponse)
 
 	if e != nil {
 		if errorResponse.Error.Message != "" {
