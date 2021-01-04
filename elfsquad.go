@@ -95,7 +95,7 @@ func (es *Elfsquad) delete(urlPath string, bodyModel interface{}, responseModel 
 
 func (es *Elfsquad) httpRequest(httpMethod string, urlPath string, bodyModel interface{}, responseModel interface{}) (*http.Request, *http.Response, *errortools.Error) {
 	url := fmt.Sprintf("%s/%s", APIURLData, urlPath)
-	fmt.Println(url)
+	//fmt.Println(url)
 
 	e := new(errortools.Error)
 
