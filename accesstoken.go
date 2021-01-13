@@ -22,14 +22,14 @@ type AccessToken struct {
 	Scope       string `json:"scope"`
 }
 
-func (es *Elfsquad) GetAccessToken() (*oauth2.Token, *errortools.Error) {
+func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 	client := new(http.Client)
 
 	urlString := AccessTokenURL
 
 	data := url.Values{}
-	data.Set("client_id", es.clientID)
-	data.Set("client_secret", es.clientSecret)
+	data.Set("client_id", service.clientID)
+	data.Set("client_secret", service.clientSecret)
 	data.Set("grant_type", AccessTokenGrantType)
 	data.Set("scope", AccessTokenScope)
 

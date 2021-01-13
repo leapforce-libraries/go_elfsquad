@@ -35,7 +35,7 @@ type Feature struct {
 	UpdatedDate      string     `json:"updatedDate"`
 }
 
-func (es *Elfsquad) GetFeatures() (*[]Feature, *errortools.Error) {
+func (service *Service) GetFeatures() (*[]Feature, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -47,7 +47,7 @@ func (es *Elfsquad) GetFeatures() (*[]Feature, *errortools.Error) {
 		urlPath := fmt.Sprintf("features?$top=%v&$skip=%v", top, skip)
 
 		featuresReponse := FeaturesResponse{}
-		_, _, e := es.get(urlPath, &featuresReponse)
+		_, _, e := service.get(urlPath, &featuresReponse)
 		if e != nil {
 			return nil, e
 		}

@@ -27,7 +27,7 @@ type Configuration struct {
 	CreatorID           types.GUID `json:"creatorId"`
 }
 
-func (es *Elfsquad) GetConfigurations() (*[]Configuration, *errortools.Error) {
+func (service *Service) GetConfigurations() (*[]Configuration, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -39,7 +39,7 @@ func (es *Elfsquad) GetConfigurations() (*[]Configuration, *errortools.Error) {
 		urlPath := fmt.Sprintf("configurations?$top=%v&$skip=%v", top, skip)
 
 		configurationsReponse := ConfigurationsResponse{}
-		_, _, e := es.get(urlPath, &configurationsReponse)
+		_, _, e := service.get(urlPath, &configurationsReponse)
 		if e != nil {
 			return nil, e
 		}

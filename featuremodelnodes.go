@@ -41,7 +41,7 @@ type FeatureModelNode struct {
 	UpdatedDate                  string     `json:"updatedDate"`
 }
 
-func (es *Elfsquad) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools.Error) {
+func (service *Service) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -53,7 +53,7 @@ func (es *Elfsquad) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools.Err
 		urlPath := fmt.Sprintf("featuremodelnodes?$top=%v&$skip=%v", top, skip)
 
 		featureModelNodesReponse := FeatureModelNodesResponse{}
-		_, _, e := es.get(urlPath, &featureModelNodesReponse)
+		_, _, e := service.get(urlPath, &featureModelNodesReponse)
 		if e != nil {
 			return nil, e
 		}

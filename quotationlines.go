@@ -46,7 +46,7 @@ type QuotationLine struct {
 	CreatorID                       types.GUID `json:"creatorId"`
 }
 
-func (es *Elfsquad) GetQuotationLines() (*[]QuotationLine, *errortools.Error) {
+func (service *Service) GetQuotationLines() (*[]QuotationLine, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -58,7 +58,7 @@ func (es *Elfsquad) GetQuotationLines() (*[]QuotationLine, *errortools.Error) {
 		urlPath := fmt.Sprintf("quotationlines?$top=%v&$skip=%v", top, skip)
 
 		quotationLinesReponse := QuotationLinesResponse{}
-		_, _, e := es.get(urlPath, &quotationLinesReponse)
+		_, _, e := service.get(urlPath, &quotationLinesReponse)
 		if e != nil {
 			return nil, e
 		}

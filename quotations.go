@@ -47,7 +47,7 @@ type GetQuotationsParams struct {
 	Select          *[]string
 }
 
-func (es *Elfsquad) GetQuotations(params *GetQuotationsParams) (*[]Quotation, *errortools.Error) {
+func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -76,7 +76,7 @@ func (es *Elfsquad) GetQuotations(params *GetQuotationsParams) (*[]Quotation, *e
 		}
 
 		quotationsReponse := QuotationsResponse{}
-		_, _, e := es.get(urlPath, &quotationsReponse)
+		_, _, e := service.get(urlPath, &quotationsReponse)
 		if e != nil {
 			return nil, e
 		}
@@ -93,10 +93,10 @@ func (es *Elfsquad) GetQuotations(params *GetQuotationsParams) (*[]Quotation, *e
 	return &quotations, nil
 }
 
-func (es *Elfsquad) UpdateQuotation(quotationID types.GUID, quotationUpdate *Quotation) *errortools.Error {
+func (service *Service) UpdateQuotation(quotationID types.GUID, quotationUpdate *Quotation) *errortools.Error {
 	urlPath := fmt.Sprintf("quotations(%s)", quotationID.String())
 
-	_, _, e := es.patch(urlPath, quotationUpdate, nil)
+	_, _, e := service.patch(urlPath, quotationUpdate, nil)
 
 	return e
 }

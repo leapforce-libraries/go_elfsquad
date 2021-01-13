@@ -24,7 +24,7 @@ type Category struct {
 	CreatorID      types.GUID `json:"creatorId"`
 }
 
-func (es *Elfsquad) GetCategories() (*[]Category, *errortools.Error) {
+func (service *Service) GetCategories() (*[]Category, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -36,7 +36,7 @@ func (es *Elfsquad) GetCategories() (*[]Category, *errortools.Error) {
 		urlPath := fmt.Sprintf("categories?$top=%v&$skip=%v", top, skip)
 
 		categoriesReponse := CategoriesResponse{}
-		_, _, e := es.get(urlPath, &categoriesReponse)
+		_, _, e := service.get(urlPath, &categoriesReponse)
 		if e != nil {
 			return nil, e
 		}

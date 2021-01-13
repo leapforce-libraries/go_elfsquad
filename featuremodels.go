@@ -27,7 +27,7 @@ type FeatureModel struct {
 	CreatorID        types.GUID `json:"creatorId"`
 }
 
-func (es *Elfsquad) GetFeatureModels() (*[]FeatureModel, *errortools.Error) {
+func (service *Service) GetFeatureModels() (*[]FeatureModel, *errortools.Error) {
 	top := 100
 	skip := 0
 
@@ -39,7 +39,7 @@ func (es *Elfsquad) GetFeatureModels() (*[]FeatureModel, *errortools.Error) {
 		urlPath := fmt.Sprintf("featuremodels?$top=%v&$skip=%v", top, skip)
 
 		featureModelsReponse := FeatureModelsResponse{}
-		_, _, e := es.get(urlPath, &featureModelsReponse)
+		_, _, e := service.get(urlPath, &featureModelsReponse)
 		if e != nil {
 			return nil, e
 		}
