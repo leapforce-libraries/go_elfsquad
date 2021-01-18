@@ -7,7 +7,6 @@ import (
 	"time"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
-	google "github.com/leapforce-libraries/go_google"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
 )
 
@@ -30,7 +29,7 @@ type Service struct {
 
 // methods
 //
-func NewService(clientID string, clientSecret string, bigQuery *google.BigQuery) (*Service, *errortools.Error) {
+func NewService(clientID string, clientSecret string) (*Service, *errortools.Error) {
 	service := Service{clientID: clientID, clientSecret: clientSecret}
 
 	tokenFunction := func() (*oauth2.Token, *errortools.Error) {
