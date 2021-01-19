@@ -4,6 +4,7 @@ import (
 	"fmt"
 	url "net/url"
 	"strings"
+	"time"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
@@ -45,6 +46,8 @@ type Quotation struct {
 
 type GetQuotationsParams struct {
 	QuotationNumber *int64
+	UpdatedAfter    *time.Time
+	Status          *string
 	Select          *[]string
 }
 
@@ -57,6 +60,12 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 	if params != nil {
 		if params.QuotationNumber != nil {
 			filter = append(filter, fmt.Sprintf("QuotationNumber eq %v", *params.QuotationNumber))
+		}
+		if params.UpdatedAfter != nil {
+			filter = append(filter, fmt.Sprintf("UpdatedDate gt %s", params.UpdatedAfter.Format(time.RFC3339)))
+		}
+		if params.Status != nil {
+			filter = append(filter, fmt.Sprintf("Status eq '%s'", *params.Status))
 		}
 	}
 
