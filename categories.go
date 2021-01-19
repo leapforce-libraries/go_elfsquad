@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
+	oauth2 "github.com/leapforce-libraries/go_oauth2"
 	types "github.com/leapforce-libraries/go_types"
 )
 
@@ -35,16 +36,20 @@ func (service *Service) GetCategories() (*[]Category, *errortools.Error) {
 	for skip == 0 || rowCount > 0 {
 		urlPath := fmt.Sprintf("categories?$top=%v&$skip=%v", top, skip)
 
-		categoriesReponse := CategoriesResponse{}
-		_, _, e := service.get(urlPath, &categoriesReponse)
+		categoriesResponse := CategoriesResponse{}
+		requestConfig := oauth2.RequestConfig{
+			URL:           service.url(urlPath),
+			ResponseModel: &categoriesResponse,
+		}
+		_, _, e := service.get(&requestConfig)
 		if e != nil {
 			return nil, e
 		}
 
-		rowCount = len(categoriesReponse.Value)
+		rowCount = len(categoriesResponse.Value)
 
 		if rowCount > 0 {
-			categories = append(categories, categoriesReponse.Value...)
+			categories = append(categories, categoriesResponse.Value...)
 		}
 
 		skip += top

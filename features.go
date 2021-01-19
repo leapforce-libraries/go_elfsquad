@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
+	oauth2 "github.com/leapforce-libraries/go_oauth2"
 	types "github.com/leapforce-libraries/go_types"
 )
 
@@ -46,16 +47,20 @@ func (service *Service) GetFeatures() (*[]Feature, *errortools.Error) {
 	for skip == 0 || rowCount > 0 {
 		urlPath := fmt.Sprintf("features?$top=%v&$skip=%v", top, skip)
 
-		featuresReponse := FeaturesResponse{}
-		_, _, e := service.get(urlPath, &featuresReponse)
+		featuresResponse := FeaturesResponse{}
+		requestConfig := oauth2.RequestConfig{
+			URL:           service.url(urlPath),
+			ResponseModel: &featuresResponse,
+		}
+		_, _, e := service.get(&requestConfig)
 		if e != nil {
 			return nil, e
 		}
 
-		rowCount = len(featuresReponse.Value)
+		rowCount = len(featuresResponse.Value)
 
 		if rowCount > 0 {
-			features = append(features, featuresReponse.Value...)
+			features = append(features, featuresResponse.Value...)
 		}
 
 		skip += top

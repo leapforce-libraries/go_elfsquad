@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	APIName              string = "Service"
 	APIURLData           string = "https://api.elfsquad.io/data/1"
 	AccessTokenURL       string = "https://login.elfsquad.io/connect/token"
 	AccessTokenMethod    string = http.MethodPost
@@ -37,8 +36,8 @@ func NewService(clientID string, clientSecret string) (*Service, *errortools.Err
 	}
 
 	config := oauth2.OAuth2Config{
-		ClientID:         clientID,
-		ClientSecret:     clientSecret,
+		//ClientID:         clientID,
+		//ClientSecret:     clientSecret,
 		NewTokenFunction: &tokenFunction,
 	}
 	service.oAuth2 = oauth2.NewOAuth(config)
@@ -62,44 +61,45 @@ func ParseDateString(date string) *time.Time {
 
 // generic Get method
 //
-func (service *Service) get(urlPath string, responseModel interface{}) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodGet, urlPath, nil, responseModel)
+func (service *Service) get(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.httpRequest(http.MethodGet, requestConfig)
 }
 
 // generic Post method
 //
-func (service *Service) post(urlPath string, bodyModel interface{}, responseModel interface{}) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodPost, urlPath, bodyModel, responseModel)
+func (service *Service) post(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.httpRequest(http.MethodPost, requestConfig)
 }
 
 // generic Put method
 //
-func (service *Service) put(urlPath string, bodyModel interface{}, responseModel interface{}) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodPut, urlPath, bodyModel, responseModel)
+func (service *Service) put(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.httpRequest(http.MethodPut, requestConfig)
 }
 
 // generic Patch method
 //
-func (service *Service) patch(urlPath string, bodyModel interface{}, responseModel interface{}) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodPatch, urlPath, bodyModel, responseModel)
+func (service *Service) patch(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.httpRequest(http.MethodPatch, requestConfig)
 }
 
 // generic Delete method
 //
-func (service *Service) delete(urlPath string, bodyModel interface{}, responseModel interface{}) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodDelete, urlPath, bodyModel, responseModel)
+func (service *Service) delete(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.httpRequest(http.MethodDelete, requestConfig)
 }
 
-func (service *Service) httpRequest(httpMethod string, urlPath string, bodyModel interface{}, responseModel interface{}) (*http.Request, *http.Response, *errortools.Error) {
-	url := fmt.Sprintf("%s/%s", APIURLData, urlPath)
-	//fmt.Println(url)
+func (service *Service) url(path string) string {
+	return fmt.Sprintf("%s/%s", APIURLData, path)
+}
 
+func (service *Service) httpRequest(httpMethod string, requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
 	e := new(errortools.Error)
 
 	errorResponse := ErrorResponse{}
+	requestConfig.ErrorModel = &errorResponse
 
-	request, response, e := service.oAuth2.HTTP(httpMethod, url, bodyModel, responseModel, &errorResponse)
-
+	request, response, e := service.oAuth2.HTTP(httpMethod, requestConfig)
 	if e != nil {
 		if errorResponse.Error.Message != "" {
 			e.SetMessage(errorResponse.Error.Message)

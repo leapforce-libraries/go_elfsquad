@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
+	oauth2 "github.com/leapforce-libraries/go_oauth2"
 	types "github.com/leapforce-libraries/go_types"
 )
 
@@ -57,16 +58,20 @@ func (service *Service) GetQuotationLines() (*[]QuotationLine, *errortools.Error
 	for skip == 0 || rowCount > 0 {
 		urlPath := fmt.Sprintf("quotationlines?$top=%v&$skip=%v", top, skip)
 
-		quotationLinesReponse := QuotationLinesResponse{}
-		_, _, e := service.get(urlPath, &quotationLinesReponse)
+		quotationLinesResponse := QuotationLinesResponse{}
+		requestConfig := oauth2.RequestConfig{
+			URL:           service.url(urlPath),
+			ResponseModel: &quotationLinesResponse,
+		}
+		_, _, e := service.get(&requestConfig)
 		if e != nil {
 			return nil, e
 		}
 
-		rowCount = len(quotationLinesReponse.Value)
+		rowCount = len(quotationLinesResponse.Value)
 
 		if rowCount > 0 {
-			quotationLines = append(quotationLines, quotationLinesReponse.Value...)
+			quotationLines = append(quotationLines, quotationLinesResponse.Value...)
 		}
 
 		skip += top

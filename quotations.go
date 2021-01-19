@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
+	oauth2 "github.com/leapforce-libraries/go_oauth2"
 	types "github.com/leapforce-libraries/go_types"
 )
 
@@ -75,16 +76,20 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 			}
 		}
 
-		quotationsReponse := QuotationsResponse{}
-		_, _, e := service.get(urlPath, &quotationsReponse)
+		quotationsResponse := QuotationsResponse{}
+		requestConfig := oauth2.RequestConfig{
+			URL:           service.url(urlPath),
+			ResponseModel: &quotationsResponse,
+		}
+		_, _, e := service.get(&requestConfig)
 		if e != nil {
 			return nil, e
 		}
 
-		rowCount = len(quotationsReponse.Value)
+		rowCount = len(quotationsResponse.Value)
 
 		if rowCount > 0 {
-			quotations = append(quotations, quotationsReponse.Value...)
+			quotations = append(quotations, quotationsResponse.Value...)
 		}
 
 		skip += top
@@ -96,7 +101,11 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 func (service *Service) UpdateQuotation(quotationID types.GUID, quotationUpdate *Quotation) *errortools.Error {
 	urlPath := fmt.Sprintf("quotations(%s)", quotationID.String())
 
-	_, _, e := service.patch(urlPath, quotationUpdate, nil)
+	requestConfig := oauth2.RequestConfig{
+		URL:       service.url(urlPath),
+		BodyModel: quotationUpdate,
+	}
+	_, _, e := service.patch(&requestConfig)
 
 	return e
 }
