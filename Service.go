@@ -12,7 +12,7 @@ import (
 
 const (
 	APIURLData           string = "https://api.elfsquad.io/data/1"
-	AccessTokenURL       string = "https://login.elfsquad.io/connect/token"
+	AccessTokenURL       string = "https://api.elfsquad.io/api/2/auth/elfskotconnectlogin"
 	AccessTokenMethod    string = http.MethodPost
 	AccessTokenGrantType string = "client_credentials"
 	AccessTokenScope     string = "Elfskot.Api"
@@ -94,12 +94,11 @@ func (service *Service) url(path string) string {
 }
 
 func (service *Service) httpRequest(httpMethod string, requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	e := new(errortools.Error)
-
 	errorResponse := ErrorResponse{}
-	requestConfig.ErrorModel = &errorResponse
+	(*requestConfig).ErrorModel = &errorResponse
 
 	request, response, e := service.oAuth2.HTTP(httpMethod, requestConfig)
+
 	if e != nil {
 		if errorResponse.Error.Message != "" {
 			e.SetMessage(errorResponse.Error.Message)
@@ -107,8 +106,6 @@ func (service *Service) httpRequest(httpMethod string, requestConfig *oauth2.Req
 
 		b, _ := json.Marshal(errorResponse)
 		e.SetExtra("error", string(b))
-
-		return nil, nil, e
 	}
 
 	return request, response, e
