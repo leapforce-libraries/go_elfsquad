@@ -2,7 +2,6 @@ package elfsquad
 
 import (
 	"encoding/json"
-	"fmt"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
@@ -37,9 +36,8 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 		SkipAccessToken: &skipAccessToken,
 	}
 
-	req, _, e := service.post(&requestConfig)
+	_, _, e := service.post(&requestConfig)
 	if e != nil {
-		fmt.Println("test", req.Header)
 		return nil, e
 	}
 
