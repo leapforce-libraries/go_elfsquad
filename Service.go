@@ -7,6 +7,7 @@ import (
 	"time"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
+	go_http "github.com/leapforce-libraries/go_http"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
 )
 
@@ -26,21 +27,39 @@ type Service struct {
 	oAuth2       *oauth2.OAuth2
 }
 
+type ServiceConfig struct {
+	ClientID              string
+	ClientSecret          string
+	MaxRetries            *uint
+	SecondsBetweenRetries *uint32
+}
+
 // methods
 //
-func NewService(clientID string, clientSecret string) (*Service, *errortools.Error) {
-	service := Service{clientID: clientID, clientSecret: clientSecret}
+func NewService(serviceConfig ServiceConfig) (*Service, *errortools.Error) {
+	if serviceConfig.ClientID == "" {
+		return nil, errortools.ErrorMessage("ClientID not provided")
+	}
+
+	if serviceConfig.ClientSecret == "" {
+		return nil, errortools.ErrorMessage("ClientSecret not provided")
+	}
+
+	service := Service{
+		clientID:     serviceConfig.ClientID,
+		clientSecret: serviceConfig.ClientSecret,
+	}
 
 	tokenFunction := func() (*oauth2.Token, *errortools.Error) {
 		return service.GetAccessToken()
 	}
 
-	config := oauth2.OAuth2Config{
-		//ClientID:         clientID,
-		//ClientSecret:     clientSecret,
-		NewTokenFunction: &tokenFunction,
+	oAuth2Config := oauth2.OAuth2Config{
+		NewTokenFunction:      &tokenFunction,
+		MaxRetries:            serviceConfig.MaxRetries,
+		SecondsBetweenRetries: serviceConfig.SecondsBetweenRetries,
 	}
-	service.oAuth2 = oauth2.NewOAuth(config)
+	service.oAuth2 = oauth2.NewOAuth(oAuth2Config)
 	return &service, nil
 }
 
@@ -61,43 +80,43 @@ func ParseDateString(date string) *time.Time {
 
 // generic Get method
 //
-func (service *Service) get(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodGet, requestConfig)
+func (service *Service) get(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.oAuth2.Get(requestConfig)
 }
 
 // generic Post method
 //
-func (service *Service) post(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodPost, requestConfig)
+func (service *Service) post(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.oAuth2.Post(requestConfig)
 }
 
 // generic Put method
 //
-func (service *Service) put(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodPut, requestConfig)
+func (service *Service) put(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.oAuth2.Put(requestConfig)
 }
 
 // generic Patch method
 //
-func (service *Service) patch(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodPatch, requestConfig)
+func (service *Service) patch(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.oAuth2.Patch(requestConfig)
 }
 
 // generic Delete method
 //
-func (service *Service) delete(requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.httpRequest(http.MethodDelete, requestConfig)
+func (service *Service) delete(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	return service.oAuth2.Delete(requestConfig)
 }
 
 func (service *Service) url(path string) string {
 	return fmt.Sprintf("%s/%s", APIURLData, path)
 }
 
-func (service *Service) httpRequest(httpMethod string, requestConfig *oauth2.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+func (service *Service) httpRequest(httpMethod string, requestConfig *go_http.RequestConfig, skipAccessToken bool) (*http.Request, *http.Response, *errortools.Error) {
 	errorResponse := ErrorResponse{}
 	(*requestConfig).ErrorModel = &errorResponse
 
-	request, response, e := service.oAuth2.HTTP(httpMethod, requestConfig)
+	request, response, e := service.oAuth2.HTTPRequest(httpMethod, requestConfig, skipAccessToken)
 
 	if e != nil {
 		if errorResponse.Error.Message != "" {

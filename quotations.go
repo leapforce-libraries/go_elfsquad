@@ -7,7 +7,7 @@ import (
 	"time"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
-	oauth2 "github.com/leapforce-libraries/go_oauth2"
+	go_http "github.com/leapforce-libraries/go_http"
 	types "github.com/leapforce-libraries/go_types"
 )
 
@@ -46,6 +46,7 @@ type Quotation struct {
 
 type GetQuotationsParams struct {
 	QuotationNumber *int64
+	CreatedAfter    *time.Time
 	UpdatedAfter    *time.Time
 	Status          *string
 	Select          *[]string
@@ -60,6 +61,9 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 	if params != nil {
 		if params.QuotationNumber != nil {
 			filter = append(filter, fmt.Sprintf("QuotationNumber eq %v", *params.QuotationNumber))
+		}
+		if params.CreatedAfter != nil {
+			filter = append(filter, fmt.Sprintf("CreatedDate gt %s", params.CreatedAfter.Format(time.RFC3339)))
 		}
 		if params.UpdatedAfter != nil {
 			filter = append(filter, fmt.Sprintf("UpdatedDate gt %s", params.UpdatedAfter.Format(time.RFC3339)))
@@ -86,7 +90,7 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 		}
 
 		quotationsResponse := QuotationsResponse{}
-		requestConfig := oauth2.RequestConfig{
+		requestConfig := go_http.RequestConfig{
 			URL:           service.url(urlPath),
 			ResponseModel: &quotationsResponse,
 		}
@@ -110,7 +114,7 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 func (service *Service) UpdateQuotation(quotationID types.GUID, quotationUpdate *Quotation) *errortools.Error {
 	urlPath := fmt.Sprintf("quotations(%s)", quotationID.String())
 
-	requestConfig := oauth2.RequestConfig{
+	requestConfig := go_http.RequestConfig{
 		URL:       service.url(urlPath),
 		BodyModel: quotationUpdate,
 	}

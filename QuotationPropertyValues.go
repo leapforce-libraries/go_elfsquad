@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
-	oauth2 "github.com/leapforce-libraries/go_oauth2"
+	go_http "github.com/leapforce-libraries/go_http"
 	types "github.com/leapforce-libraries/go_types"
 )
 
@@ -70,7 +70,7 @@ func (service *Service) GetQuotationPropertyValues(params *GetQuotationPropertyV
 		}
 
 		quotationPropertyValuesResponse := QuotationPropertyValuesResponse{}
-		requestConfig := oauth2.RequestConfig{
+		requestConfig := go_http.RequestConfig{
 			URL:           service.url(urlPath),
 			ResponseModel: &quotationPropertyValuesResponse,
 		}

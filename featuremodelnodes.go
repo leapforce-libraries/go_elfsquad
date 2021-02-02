@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
-	oauth2 "github.com/leapforce-libraries/go_oauth2"
+	go_http "github.com/leapforce-libraries/go_http"
 	types "github.com/leapforce-libraries/go_types"
 )
 
@@ -54,7 +54,7 @@ func (service *Service) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools
 		urlPath := fmt.Sprintf("featuremodelnodes?$top=%v&$skip=%v", top, skip)
 
 		featureModelNodesResponse := FeatureModelNodesResponse{}
-		requestConfig := oauth2.RequestConfig{
+		requestConfig := go_http.RequestConfig{
 			URL:           service.url(urlPath),
 			ResponseModel: &featureModelNodesResponse,
 		}
