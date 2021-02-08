@@ -51,6 +51,7 @@ type GetQuotationsParams struct {
 	UpdatedAfter    *time.Time
 	Status          *string
 	Select          *[]string
+	OrderBy         *[]string
 }
 
 func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation, *errortools.Error) {
@@ -87,6 +88,9 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 		if params != nil {
 			if params.Select != nil {
 				urlPath = fmt.Sprintf("%s&$select=%s", urlPath, strings.Join(*params.Select, ","))
+			}
+			if params.OrderBy != nil {
+				urlPath = fmt.Sprintf("%s&$orderby=%s", urlPath, strings.Join(*params.OrderBy, ","))
 			}
 		}
 
