@@ -41,6 +41,7 @@ type Quotation struct {
 	CreatedDate         string      `json:"createdDate,omitempty"`
 	UpdatedDate         string      `json:"updatedDate,omitempty"`
 	OrganizationID      *types.GUID `json:"organizationId,omitempty"`
+	Reference           string      `json:"reference,omitempty"`
 	CreatorID           *types.GUID `json:"creatorId,omitempty"`
 }
 
