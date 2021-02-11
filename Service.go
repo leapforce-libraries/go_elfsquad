@@ -7,11 +7,14 @@ import (
 	"time"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
+	google "github.com/leapforce-libraries/go_google"
+	bigquery "github.com/leapforce-libraries/go_google/bigquery"
 	go_http "github.com/leapforce-libraries/go_http"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
 )
 
 const (
+	APIName              string = "Elfsquad"
 	APIURLData           string = "https://api.elfsquad.io/data/1"
 	AccessTokenURL       string = "https://api.elfsquad.io/api/2/auth/elfskotconnectlogin"
 	AccessTokenMethod    string = http.MethodPost
@@ -36,7 +39,7 @@ type ServiceConfig struct {
 
 // methods
 //
-func NewService(serviceConfig ServiceConfig) (*Service, *errortools.Error) {
+func NewService(serviceConfig ServiceConfig, bigQueryService *bigquery.Service) (*Service, *errortools.Error) {
 	if serviceConfig.ClientID == "" {
 		return nil, errortools.ErrorMessage("ClientID not provided")
 	}
@@ -50,12 +53,22 @@ func NewService(serviceConfig ServiceConfig) (*Service, *errortools.Error) {
 		clientSecret: serviceConfig.ClientSecret,
 	}
 
-	tokenFunction := func() (*oauth2.Token, *errortools.Error) {
+	getTokenFunction := func() (*oauth2.Token, *errortools.Error) {
+		return google.GetToken(APIName, serviceConfig.ClientID, bigQueryService)
+	}
+
+	saveTokenFunction := func(token *oauth2.Token) *errortools.Error {
+		return google.SaveToken(APIName, serviceConfig.ClientID, token, bigQueryService)
+	}
+
+	newTokenFunction := func() (*oauth2.Token, *errortools.Error) {
 		return service.GetAccessToken()
 	}
 
 	oAuth2Config := oauth2.OAuth2Config{
-		NewTokenFunction:      &tokenFunction,
+		GetTokenFunction:      &getTokenFunction,
+		SaveTokenFunction:     &saveTokenFunction,
+		NewTokenFunction:      &newTokenFunction,
 		MaxRetries:            serviceConfig.MaxRetries,
 		SecondsBetweenRetries: serviceConfig.SecondsBetweenRetries,
 	}

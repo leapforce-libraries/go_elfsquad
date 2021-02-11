@@ -29,7 +29,7 @@ type Feature struct {
 	CardImageURL     string     `json:"cardImageUrl"`
 	ID               types.GUID `json:"id"`
 	CreatorID        types.GUID `json:"creatorId"`
-	Reference        types.GUID `json:"reference"`
+	Reference        string     `json:"reference"`
 	Synced           bool       `json:"synced"`
 	Inactive         bool       `json:"inactive"`
 	CreatedDate      string     `json:"createdDate"`

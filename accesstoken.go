@@ -14,8 +14,6 @@ import (
 type AccessToken struct {
 	AccessToken string `json:"accessToken"`
 	ExpiresIn   int    `json:"expiresIn"`
-	//TokenType   string `json:"token_type"`
-	//Scope       string `json:"scope"`
 }
 
 func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
