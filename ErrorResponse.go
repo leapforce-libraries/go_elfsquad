@@ -1,6 +1,6 @@
 package elfsquad
 
-// ErrorResponse stores general Ridder API error response
+// ErrorResponse stores general Elfsquad error response
 //
 type ErrorResponse struct {
 	Error struct {
