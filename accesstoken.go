@@ -28,7 +28,7 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 	accessToken := AccessToken{}
 
 	requestConfig := go_http.RequestConfig{
-		URL:           AccessTokenURL,
+		URL:           accessTokenURL,
 		BodyModel:     body,
 		ResponseModel: &accessToken,
 	}
@@ -38,7 +38,7 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 		return nil, e
 	}
 
-	expiresIn, _ := json.Marshal(accessToken.ExpiresIn / 1000)
+	expiresIn, _ := json.Marshal(accessToken.ExpiresIn)
 	expiresInJSON := json.RawMessage(expiresIn)
 
 	token := oauth2.Token{

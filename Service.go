@@ -14,12 +14,12 @@ import (
 )
 
 const (
-	APIName              string = "Elfsquad"
-	APIURLData           string = "https://api.elfsquad.io/data/1"
-	AccessTokenURL       string = "https://api.elfsquad.io/api/2/auth/elfskotconnectlogin"
-	AccessTokenMethod    string = http.MethodPost
-	AccessTokenGrantType string = "client_credentials"
-	AccessTokenScope     string = "Elfskot.Api"
+	apiName              string = "Elfsquad"
+	apiURLData           string = "https://api.elfsquad.io/data/1"
+	accessTokenURL       string = "https://api.elfsquad.io/api/2/auth/elfskotconnectlogin"
+	accessTokenMethod    string = http.MethodPost
+	accessTokenGrantType string = "client_credentials"
+	accessTokenScope     string = "Elfskot.Api"
 )
 
 // Service stores Service configuration
@@ -31,10 +31,8 @@ type Service struct {
 }
 
 type ServiceConfig struct {
-	ClientID              string
-	ClientSecret          string
-	MaxRetries            *uint
-	SecondsBetweenRetries *uint32
+	ClientID     string
+	ClientSecret string
 }
 
 // methods
@@ -54,11 +52,11 @@ func NewService(serviceConfig ServiceConfig, bigQueryService *bigquery.Service) 
 	}
 
 	getTokenFunction := func() (*oauth2.Token, *errortools.Error) {
-		return google.GetToken(APIName, serviceConfig.ClientID, bigQueryService)
+		return google.GetToken(apiName, serviceConfig.ClientID, bigQueryService)
 	}
 
 	saveTokenFunction := func(token *oauth2.Token) *errortools.Error {
-		return google.SaveToken(APIName, serviceConfig.ClientID, token, bigQueryService)
+		return google.SaveToken(apiName, serviceConfig.ClientID, token, bigQueryService)
 	}
 
 	newTokenFunction := func() (*oauth2.Token, *errortools.Error) {
@@ -66,11 +64,9 @@ func NewService(serviceConfig ServiceConfig, bigQueryService *bigquery.Service) 
 	}
 
 	oAuth2Config := oauth2.OAuth2Config{
-		GetTokenFunction:      &getTokenFunction,
-		SaveTokenFunction:     &saveTokenFunction,
-		NewTokenFunction:      &newTokenFunction,
-		MaxRetries:            serviceConfig.MaxRetries,
-		SecondsBetweenRetries: serviceConfig.SecondsBetweenRetries,
+		GetTokenFunction:  &getTokenFunction,
+		SaveTokenFunction: &saveTokenFunction,
+		NewTokenFunction:  &newTokenFunction,
 	}
 	service.oAuth2 = oauth2.NewOAuth(oAuth2Config)
 	return &service, nil
@@ -122,7 +118,7 @@ func (service *Service) delete(requestConfig *go_http.RequestConfig) (*http.Requ
 }
 
 func (service *Service) url(path string) string {
-	return fmt.Sprintf("%s/%s", APIURLData, path)
+	return fmt.Sprintf("%s/%s", apiURLData, path)
 }
 
 func (service *Service) httpRequest(httpMethod string, requestConfig *go_http.RequestConfig, skipAccessToken bool) (*http.Request, *http.Response, *errortools.Error) {
