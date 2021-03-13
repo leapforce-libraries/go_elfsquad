@@ -38,7 +38,7 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 		return nil, e
 	}
 
-	expiresIn, _ := json.Marshal(accessToken.ExpiresIn)
+	expiresIn, _ := json.Marshal(accessToken.ExpiresIn / 1000)
 	expiresInJSON := json.RawMessage(expiresIn)
 
 	token := oauth2.Token{
