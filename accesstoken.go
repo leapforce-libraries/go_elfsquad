@@ -2,7 +2,6 @@ package elfsquad
 
 import (
 	"encoding/json"
-	"net/http"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
@@ -33,7 +32,7 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 		ResponseModel: &accessToken,
 	}
 
-	_, _, e := service.httpRequest(http.MethodPost, &requestConfig, true)
+	_, _, e := service.httpRequest(accessTokenMethod, &requestConfig, true)
 	if e != nil {
 		return nil, e
 	}

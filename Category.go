@@ -3,6 +3,7 @@ package elfsquad
 import (
 	"fmt"
 
+	e_types "github.com/leapforce-libraries/go_elfsquad/types"
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
 	types "github.com/leapforce-libraries/go_types"
@@ -15,14 +16,14 @@ type CategoriesResponse struct {
 }
 
 type Category struct {
-	Name           string     `json:"name"`
-	ParentID       types.GUID `json:"parentId"`
-	Order          int32      `json:"order"`
-	ID             types.GUID `json:"id"`
-	CreatedDate    string     `json:"createdDate"`
-	UpdatedDate    string     `json:"updatedDate"`
-	OrganizationID types.GUID `json:"organizationId"`
-	CreatorID      types.GUID `json:"creatorId"`
+	Name           string                 `json:"name"`
+	ParentID       types.GUID             `json:"parentId"`
+	Order          int32                  `json:"order"`
+	ID             types.GUID             `json:"id"`
+	CreatedDate    e_types.DateTimeString `json:"createdDate"`
+	UpdatedDate    e_types.DateTimeString `json:"updatedDate"`
+	OrganizationID types.GUID             `json:"organizationId"`
+	CreatorID      types.GUID             `json:"creatorId"`
 }
 
 func (service *Service) GetCategories() (*[]Category, *errortools.Error) {

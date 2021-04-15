@@ -37,7 +37,7 @@ type ServiceConfig struct {
 
 // methods
 //
-func NewService(serviceConfig ServiceConfig, bigQueryService *bigquery.Service) (*Service, *errortools.Error) {
+func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service) (*Service, *errortools.Error) {
 	if serviceConfig.ClientID == "" {
 		return nil, errortools.ErrorMessage("ClientID not provided")
 	}

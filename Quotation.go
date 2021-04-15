@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	e_types "github.com/leapforce-libraries/go_elfsquad/types"
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
 	types "github.com/leapforce-libraries/go_types"
@@ -18,31 +19,39 @@ type QuotationsResponse struct {
 }
 
 type Quotation struct {
-	SellerID            *types.GUID `json:"sellerId,omitempty"`
-	SellerContactID     *types.GUID `json:"sellerContactId,omitempty"`
-	DebtorID            *types.GUID `json:"debtorId,omitempty"`
-	DebtorContactID     *types.GUID `json:"debtorContactId,omitempty"`
-	ShipToID            *types.GUID `json:"shipToId,omitempty"`
-	ShipToContactID     *types.GUID `json:"shipToContactId,omitempty"`
-	Synced              bool        `json:"synced,omitempty"`
-	QuotationNumber     int64       `json:"quotationNumber,omitempty"`
-	VersionNumber       int32       `json:"versionNumber,omitempty"`
-	Status              string      `json:"status,omitempty"`
-	Subject             string      `json:"subject,omitempty"`
-	TotalPrice          float64     `json:"totalPrice,omitempty"`
-	IsVerified          bool        `json:"isVerified,omitempty"`
-	CustomerReference   string      `json:"customerReference,omitempty"`
-	QuotationReference  string      `json:"quotationReference,omitempty"`
-	Deliverydate        string      `json:"deliverydate,omitempty"`
-	Remarks             string      `json:"remarks,omitempty"`
-	ExpiresDate         string      `json:"expiresDate,omitempty"`
-	QuotationTemplateID *types.GUID `json:"quotationTemplateId,omitempty"`
-	ID                  *types.GUID `json:"id,omitempty"`
-	CreatedDate         string      `json:"createdDate,omitempty"`
-	UpdatedDate         string      `json:"updatedDate,omitempty"`
-	OrganizationID      *types.GUID `json:"organizationId,omitempty"`
-	Reference           string      `json:"reference,omitempty"`
-	CreatorID           *types.GUID `json:"creatorId,omitempty"`
+	SellerID            *types.GUID             `json:"sellerId,omitempty"`
+	SellerContactID     *types.GUID             `json:"sellerContactId,omitempty"`
+	DebtorID            *types.GUID             `json:"debtorId,omitempty"`
+	DebtorContactID     *types.GUID             `json:"debtorContactId,omitempty"`
+	ShipToID            *types.GUID             `json:"shipToId,omitempty"`
+	ShipToContactID     *types.GUID             `json:"shipToContactId,omitempty"`
+	LanguageISO         string                  `json:"languageIso,omitempty"`
+	CurrencyISO         string                  `json:"currencyIso,omitempty"`
+	Synced              bool                    `json:"synced,omitempty"`
+	QuotationNumber     int64                   `json:"quotationNumber,omitempty"`
+	VersionNumber       int32                   `json:"versionNumber,omitempty"`
+	Status              *string                 `json:"status,omitempty"`
+	StatusID            *types.GUID             `json:"statusId,omitempty"`
+	Subject             *string                 `json:"subject,omitempty"`
+	TotalPrice          float64                 `json:"totalPrice,omitempty"`
+	IsVerified          *bool                   `json:"isVerified,omitempty"`
+	CustomerReference   *string                 `json:"customerReference,omitempty"`
+	QuotationReference  *string                 `json:"quotationReference,omitempty"`
+	Deliverydate        *e_types.DateTimeString `json:"deliverydate,omitempty"`
+	Remarks             *string                 `json:"remarks,omitempty"`
+	ExpiresDate         *e_types.DateTimeString `json:"expiresDate,omitempty"`
+	QuotationTemplateID *types.GUID             `json:"quotationTemplateId,omitempty"`
+	ID                  types.GUID              `json:"id,omitempty"`
+	CreatedDate         e_types.DateTimeString  `json:"createdDate,omitempty"`
+	UpdatedDate         e_types.DateTimeString  `json:"updatedDate,omitempty"`
+	OrganizationID      *types.GUID             `json:"organizationId,omitempty"`
+	Reference           *string                 `json:"reference,omitempty"`
+	CreatorID           types.GUID              `json:"creatorId,omitempty"`
+	CustomField1        *string                 `json:"customField1,omitempty"`
+	CustomField2        *string                 `json:"customField2,omitempty"`
+	CustomField3        *string                 `json:"customField3,omitempty"`
+	CustomField4        *string                 `json:"customField4,omitempty"`
+	CustomField5        *string                 `json:"customField5,omitempty"`
 }
 
 type GetQuotationsParams struct {
