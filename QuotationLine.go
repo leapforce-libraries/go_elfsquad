@@ -64,11 +64,11 @@ func (service *Service) GetQuotationLines() (*[]QuotationLine, *errortools.Error
 	rowCount := 0
 
 	for skip == 0 || rowCount > 0 {
-		urlPath := fmt.Sprintf("quotationlines?$top=%v&$skip=%v", top, skip)
+		urlPath := fmt.Sprintf("QuotationLines?$top=%v&$skip=%v", top, skip)
 
 		quotationLinesResponse := QuotationLinesResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &quotationLinesResponse,
 		}
 		_, _, e := service.get(&requestConfig)

@@ -39,7 +39,7 @@ func (service *Service) GetCategories() (*[]Category, *errortools.Error) {
 
 		categoriesResponse := CategoriesResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &categoriesResponse,
 		}
 		_, _, e := service.get(&requestConfig)

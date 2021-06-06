@@ -105,7 +105,7 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 
 		quotationsResponse := QuotationsResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &quotationsResponse,
 		}
 		_, _, e := service.get(&requestConfig)
@@ -129,7 +129,7 @@ func (service *Service) UpdateQuotation(quotationID types.GUID, quotationUpdate 
 	urlPath := fmt.Sprintf("quotations(%s)", quotationID.String())
 
 	requestConfig := go_http.RequestConfig{
-		URL:       service.url(urlPath),
+		URL:       service.urlData(urlPath),
 		BodyModel: quotationUpdate,
 	}
 	_, _, e := service.patch(&requestConfig)

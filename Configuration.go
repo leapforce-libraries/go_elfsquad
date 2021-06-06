@@ -48,7 +48,7 @@ func (service *Service) GetConfigurations() (*[]Configuration, *errortools.Error
 
 		configurationsResponse := ConfigurationsResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &configurationsResponse,
 		}
 		_, _, e := service.get(&requestConfig)

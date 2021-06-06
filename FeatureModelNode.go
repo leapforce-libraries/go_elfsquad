@@ -56,7 +56,7 @@ func (service *Service) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools
 
 		featureModelNodesResponse := FeatureModelNodesResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &featureModelNodesResponse,
 		}
 		_, _, e := service.get(&requestConfig)

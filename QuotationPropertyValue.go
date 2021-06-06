@@ -71,7 +71,7 @@ func (service *Service) GetQuotationPropertyValues(params *GetQuotationPropertyV
 
 		quotationPropertyValuesResponse := QuotationPropertyValuesResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &quotationPropertyValuesResponse,
 		}
 		_, _, e := service.get(&requestConfig)

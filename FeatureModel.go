@@ -49,7 +49,7 @@ func (service *Service) GetFeatureModels() (*[]FeatureModel, *errortools.Error) 
 
 		featureModelsResponse := FeatureModelsResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &featureModelsResponse,
 		}
 		_, _, e := service.get(&requestConfig)

@@ -16,6 +16,7 @@ import (
 const (
 	apiName              string = "Elfsquad"
 	apiURLData           string = "https://api.elfsquad.io/data/1"
+	apiURL               string = "https://api.elfsquad.io/api/2"
 	accessTokenURL       string = "https://api.elfsquad.io/api/2/auth/elfskotconnectlogin"
 	accessTokenMethod    string = http.MethodPost
 	accessTokenGrantType string = "client_credentials"
@@ -25,9 +26,9 @@ const (
 // Service stores Service configuration
 //
 type Service struct {
-	clientID     string
-	clientSecret string
-	oAuth2       *oauth2.OAuth2
+	clientID      string
+	clientSecret  string
+	oAuth2Service *oauth2.Service
 }
 
 type ServiceConfig struct {
@@ -63,17 +64,23 @@ func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service)
 		return service.GetAccessToken()
 	}
 
-	oAuth2Config := oauth2.OAuth2Config{
+	oAuth2ServiceConfig := oauth2.ServiceConfig{
 		GetTokenFunction:  &getTokenFunction,
 		SaveTokenFunction: &saveTokenFunction,
 		NewTokenFunction:  &newTokenFunction,
 	}
-	service.oAuth2 = oauth2.NewOAuth(oAuth2Config)
+
+	oAuth2Service, e := oauth2.NewService(&oAuth2ServiceConfig)
+	if e != nil {
+		return nil, e
+	}
+	service.oAuth2Service = oAuth2Service
+
 	return &service, nil
 }
 
 func (service *Service) ValidateToken() (*oauth2.Token, *errortools.Error) {
-	return service.oAuth2.ValidateToken()
+	return service.oAuth2Service.ValidateToken()
 }
 
 func ParseDateString(date string) *time.Time {
@@ -90,34 +97,38 @@ func ParseDateString(date string) *time.Time {
 // generic Get method
 //
 func (service *Service) get(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2.Get(requestConfig)
+	return service.oAuth2Service.Get(requestConfig)
 }
 
 // generic Post method
 //
 func (service *Service) post(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2.Post(requestConfig)
+	return service.oAuth2Service.Post(requestConfig)
 }
 
 // generic Put method
 //
 func (service *Service) put(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2.Put(requestConfig)
+	return service.oAuth2Service.Put(requestConfig)
 }
 
 // generic Patch method
 //
 func (service *Service) patch(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2.Patch(requestConfig)
+	return service.oAuth2Service.Patch(requestConfig)
 }
 
 // generic Delete method
 //
 func (service *Service) delete(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2.Delete(requestConfig)
+	return service.oAuth2Service.Delete(requestConfig)
 }
 
 func (service *Service) url(path string) string {
+	return fmt.Sprintf("%s/%s", apiURL, path)
+}
+
+func (service *Service) urlData(path string) string {
 	return fmt.Sprintf("%s/%s", apiURLData, path)
 }
 
@@ -125,7 +136,7 @@ func (service *Service) httpRequest(httpMethod string, requestConfig *go_http.Re
 	errorResponse := ErrorResponse{}
 	(*requestConfig).ErrorModel = &errorResponse
 
-	request, response, e := service.oAuth2.HTTPRequest(httpMethod, requestConfig, skipAccessToken)
+	request, response, e := service.oAuth2Service.HTTPRequest(httpMethod, requestConfig, skipAccessToken)
 
 	if e != nil {
 		if errorResponse.Error.Message != "" {
@@ -137,4 +148,20 @@ func (service *Service) httpRequest(httpMethod string, requestConfig *go_http.Re
 	}
 
 	return request, response, e
+}
+
+func (service Service) APIName() string {
+	return apiName
+}
+
+func (service Service) APIKey() string {
+	return service.clientID
+}
+
+func (service Service) APICallCount() int64 {
+	return service.oAuth2Service.APICallCount()
+}
+
+func (service Service) APIReset() {
+	service.oAuth2Service.APIReset()
 }

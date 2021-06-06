@@ -50,7 +50,7 @@ func (service *Service) GetFeatures() (*[]Feature, *errortools.Error) {
 
 		featuresResponse := FeaturesResponse{}
 		requestConfig := go_http.RequestConfig{
-			URL:           service.url(urlPath),
+			URL:           service.urlData(urlPath),
 			ResponseModel: &featuresResponse,
 		}
 		_, _, e := service.get(&requestConfig)
