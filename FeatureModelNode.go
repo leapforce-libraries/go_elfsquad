@@ -2,6 +2,7 @@ package elfsquad
 
 import (
 	"fmt"
+	"net/http"
 
 	e_types "github.com/leapforce-libraries/go_elfsquad/types"
 	errortools "github.com/leapforce-libraries/go_errortools"
@@ -56,10 +57,11 @@ func (service *Service) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools
 
 		featureModelNodesResponse := FeatureModelNodesResponse{}
 		requestConfig := go_http.RequestConfig{
+			Method:        http.MethodGet,
 			URL:           service.urlData(urlPath),
 			ResponseModel: &featureModelNodesResponse,
 		}
-		_, _, e := service.get(&requestConfig)
+		_, _, e := service.httpRequest(&requestConfig)
 		if e != nil {
 			return nil, e
 		}

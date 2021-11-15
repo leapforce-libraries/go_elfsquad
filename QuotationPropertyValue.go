@@ -2,6 +2,7 @@ package elfsquad
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -71,10 +72,11 @@ func (service *Service) GetQuotationPropertyValues(params *GetQuotationPropertyV
 
 		quotationPropertyValuesResponse := QuotationPropertyValuesResponse{}
 		requestConfig := go_http.RequestConfig{
+			Method:        http.MethodGet,
 			URL:           service.urlData(urlPath),
 			ResponseModel: &quotationPropertyValuesResponse,
 		}
-		_, _, e := service.get(&requestConfig)
+		_, _, e := service.httpRequest(&requestConfig)
 		if e != nil {
 			return nil, e
 		}

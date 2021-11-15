@@ -2,6 +2,7 @@ package elfsquad
 
 import (
 	"fmt"
+	"net/http"
 	url "net/url"
 	"strings"
 	"time"
@@ -105,10 +106,11 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 
 		quotationsResponse := QuotationsResponse{}
 		requestConfig := go_http.RequestConfig{
+			Method:        http.MethodGet,
 			URL:           service.urlData(urlPath),
 			ResponseModel: &quotationsResponse,
 		}
-		_, _, e := service.get(&requestConfig)
+		_, _, e := service.httpRequest(&requestConfig)
 		if e != nil {
 			return nil, e
 		}
@@ -129,10 +131,11 @@ func (service *Service) UpdateQuotation(quotationID types.GUID, quotationUpdate 
 	urlPath := fmt.Sprintf("quotations(%s)", quotationID.String())
 
 	requestConfig := go_http.RequestConfig{
+		Method:    http.MethodPatch,
 		URL:       service.urlData(urlPath),
 		BodyModel: quotationUpdate,
 	}
-	_, _, e := service.patch(&requestConfig)
+	_, _, e := service.httpRequest(&requestConfig)
 
 	return e
 }

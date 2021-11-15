@@ -94,36 +94,6 @@ func ParseDateString(date string) *time.Time {
 	return nil
 }
 
-// generic Get method
-//
-func (service *Service) get(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2Service.Get(requestConfig)
-}
-
-// generic Post method
-//
-func (service *Service) post(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2Service.Post(requestConfig)
-}
-
-// generic Put method
-//
-func (service *Service) put(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2Service.Put(requestConfig)
-}
-
-// generic Patch method
-//
-func (service *Service) patch(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2Service.Patch(requestConfig)
-}
-
-// generic Delete method
-//
-func (service *Service) delete(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
-	return service.oAuth2Service.Delete(requestConfig)
-}
-
 func (service *Service) url(path string) string {
 	return fmt.Sprintf("%s/%s", apiURL, path)
 }
@@ -132,11 +102,29 @@ func (service *Service) urlData(path string) string {
 	return fmt.Sprintf("%s/%s", apiURLData, path)
 }
 
-func (service *Service) httpRequest(httpMethod string, requestConfig *go_http.RequestConfig, skipAccessToken bool) (*http.Request, *http.Response, *errortools.Error) {
+func (service *Service) httpRequest(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
 	errorResponse := ErrorResponse{}
 	(*requestConfig).ErrorModel = &errorResponse
 
-	request, response, e := service.oAuth2Service.HTTPRequest(httpMethod, requestConfig, skipAccessToken)
+	request, response, e := service.oAuth2Service.HTTPRequest(requestConfig)
+
+	if e != nil {
+		if errorResponse.Error.Message != "" {
+			e.SetMessage(errorResponse.Error.Message)
+		}
+
+		b, _ := json.Marshal(errorResponse)
+		e.SetExtra("error", string(b))
+	}
+
+	return request, response, e
+}
+
+func (service *Service) httpRequestWithoutAccessToken(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
+	errorResponse := ErrorResponse{}
+	(*requestConfig).ErrorModel = &errorResponse
+
+	request, response, e := service.oAuth2Service.HTTPRequestWithoutAccessToken(requestConfig)
 
 	if e != nil {
 		if errorResponse.Error.Message != "" {

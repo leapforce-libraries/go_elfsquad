@@ -2,6 +2,7 @@ package elfsquad
 
 import (
 	"fmt"
+	"net/http"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
@@ -35,10 +36,11 @@ func (service *Service) GetCountries() (*[]Country, *errortools.Error) {
 
 		countriesResponse := CountriesResponse{}
 		requestConfig := go_http.RequestConfig{
+			Method:        http.MethodGet,
 			URL:           service.urlData(urlPath),
 			ResponseModel: &countriesResponse,
 		}
-		_, _, e := service.get(&requestConfig)
+		_, _, e := service.httpRequest(&requestConfig)
 		if e != nil {
 			return nil, e
 		}

@@ -27,12 +27,13 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 	accessToken := AccessToken{}
 
 	requestConfig := go_http.RequestConfig{
+		Method:        accessTokenMethod,
 		URL:           accessTokenURL,
 		BodyModel:     body,
 		ResponseModel: &accessToken,
 	}
 
-	_, _, e := service.httpRequest(accessTokenMethod, &requestConfig, true)
+	_, _, e := service.httpRequestWithoutAccessToken(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
