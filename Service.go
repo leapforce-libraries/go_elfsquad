@@ -7,10 +7,10 @@ import (
 	"time"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
-	google "github.com/leapforce-libraries/go_google"
 	bigquery "github.com/leapforce-libraries/go_google/bigquery"
 	go_http "github.com/leapforce-libraries/go_http"
 	oauth2 "github.com/leapforce-libraries/go_oauth2"
+	o_token "github.com/leapforce-libraries/go_oauth2/token"
 )
 
 const (
@@ -52,34 +52,24 @@ func NewService(serviceConfig *ServiceConfig, bigQueryService *bigquery.Service)
 		clientSecret: serviceConfig.ClientSecret,
 	}
 
-	getTokenFunction := func() (*oauth2.Token, *errortools.Error) {
-		return google.GetToken(apiName, serviceConfig.ClientID, bigQueryService)
-	}
-
-	saveTokenFunction := func(token *oauth2.Token) *errortools.Error {
-		return google.SaveToken(apiName, serviceConfig.ClientID, token, bigQueryService)
-	}
-
-	newTokenFunction := func() (*oauth2.Token, *errortools.Error) {
-		return service.GetAccessToken()
-	}
-
-	oAuth2ServiceConfig := oauth2.ServiceConfig{
-		GetTokenFunction:  &getTokenFunction,
-		SaveTokenFunction: &saveTokenFunction,
-		NewTokenFunction:  &newTokenFunction,
-	}
-
-	oAuth2Service, e := oauth2.NewService(&oAuth2ServiceConfig)
+	tokenSource, e := NewTokenSource(&service)
 	if e != nil {
 		return nil, e
 	}
-	service.oAuth2Service = oAuth2Service
+
+	oAuth2ServiceConfig := oauth2.ServiceConfig{
+		TokenSource: tokenSource,
+	}
+	oauth2Service, e := oauth2.NewService(&oAuth2ServiceConfig)
+	if e != nil {
+		return nil, e
+	}
+	service.oAuth2Service = oauth2Service
 
 	return &service, nil
 }
 
-func (service *Service) ValidateToken() (*oauth2.Token, *errortools.Error) {
+func (service *Service) ValidateToken() (*o_token.Token, *errortools.Error) {
 	return service.oAuth2Service.ValidateToken()
 }
 
@@ -106,7 +96,7 @@ func (service *Service) httpRequest(requestConfig *go_http.RequestConfig) (*http
 	errorResponse := ErrorResponse{}
 	(*requestConfig).ErrorModel = &errorResponse
 
-	request, response, e := service.oAuth2Service.HTTPRequest(requestConfig)
+	request, response, e := service.oAuth2Service.HttpRequest(requestConfig)
 
 	if e != nil {
 		if errorResponse.Error.Message != "" {
@@ -124,7 +114,7 @@ func (service *Service) httpRequestWithoutAccessToken(requestConfig *go_http.Req
 	errorResponse := ErrorResponse{}
 	(*requestConfig).ErrorModel = &errorResponse
 
-	request, response, e := service.oAuth2Service.HTTPRequestWithoutAccessToken(requestConfig)
+	request, response, e := service.oAuth2Service.HttpRequestWithoutAccessToken(requestConfig)
 
 	if e != nil {
 		if errorResponse.Error.Message != "" {
@@ -138,18 +128,18 @@ func (service *Service) httpRequestWithoutAccessToken(requestConfig *go_http.Req
 	return request, response, e
 }
 
-func (service Service) APIName() string {
+func (service Service) ApiName() string {
 	return apiName
 }
 
-func (service Service) APIKey() string {
+func (service Service) ApiKey() string {
 	return service.clientID
 }
 
-func (service Service) APICallCount() int64 {
-	return service.oAuth2Service.APICallCount()
+func (service Service) ApiCallCount() int64 {
+	return service.oAuth2Service.ApiCallCount()
 }
 
-func (service Service) APIReset() {
-	service.oAuth2Service.APIReset()
+func (service Service) ApiReset() {
+	service.oAuth2Service.ApiReset()
 }

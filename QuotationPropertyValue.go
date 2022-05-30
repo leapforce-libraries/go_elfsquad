@@ -18,14 +18,14 @@ type QuotationPropertyValuesResponse struct {
 }
 
 type QuotationPropertyValue struct {
-	EntityID         types.GUID `json:"entityId"`
-	EntityPropertyID types.GUID `json:"entityPropertyId"`
+	EntityID         types.Guid `json:"entityId"`
+	EntityPropertyID types.Guid `json:"entityPropertyId"`
 	Value            string     `json:"value"`
-	ID               types.GUID `json:"id"`
+	ID               types.Guid `json:"id"`
 	CreatedDate      string     `json:"createdDate"`
 	UpdatedDate      string     `json:"updatedDate"`
-	OrganizationID   types.GUID `json:"organizationId"`
-	CreatorID        types.GUID `json:"creatorId"`
+	OrganizationID   types.Guid `json:"organizationId"`
+	CreatorID        types.Guid `json:"creatorId"`
 	CustomField1     string     `json:"customField1"`
 	CustomField2     string     `json:"customField2"`
 	CustomField3     string     `json:"customField3"`
@@ -34,8 +34,8 @@ type QuotationPropertyValue struct {
 }
 
 type GetQuotationPropertyValuesParams struct {
-	EntityID         *types.GUID
-	EntityPropertyID *types.GUID
+	EntityID         *types.Guid
+	EntityPropertyID *types.Guid
 	Select           *[]string
 }
 
@@ -73,7 +73,7 @@ func (service *Service) GetQuotationPropertyValues(params *GetQuotationPropertyV
 		quotationPropertyValuesResponse := QuotationPropertyValuesResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &quotationPropertyValuesResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

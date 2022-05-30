@@ -26,11 +26,11 @@ type Feature struct {
 	MaxValue         float64                `json:"maxValue"`
 	StepValue        float64                `json:"stepValue"`
 	PackingUnit      float64                `json:"packingUnit"`
-	CategoryID       types.GUID             `json:"categoryId"`
+	CategoryID       types.Guid             `json:"categoryId"`
 	MarginPct        float64                `json:"marginPct"`
 	CardImageURL     string                 `json:"cardImageUrl"`
-	ID               types.GUID             `json:"id"`
-	CreatorID        types.GUID             `json:"creatorId"`
+	ID               types.Guid             `json:"id"`
+	CreatorID        types.Guid             `json:"creatorId"`
 	Reference        string                 `json:"reference"`
 	Synced           bool                   `json:"synced"`
 	Inactive         bool                   `json:"inactive"`
@@ -52,7 +52,7 @@ func (service *Service) GetFeatures() (*[]Feature, *errortools.Error) {
 		featuresResponse := FeaturesResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &featuresResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

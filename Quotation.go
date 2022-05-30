@@ -20,19 +20,19 @@ type QuotationsResponse struct {
 }
 
 type Quotation struct {
-	SellerID            *types.GUID             `json:"sellerId,omitempty"`
-	SellerContactID     *types.GUID             `json:"sellerContactId,omitempty"`
-	DebtorID            *types.GUID             `json:"debtorId,omitempty"`
-	DebtorContactID     *types.GUID             `json:"debtorContactId,omitempty"`
-	ShipToID            *types.GUID             `json:"shipToId,omitempty"`
-	ShipToContactID     *types.GUID             `json:"shipToContactId,omitempty"`
+	SellerID            *types.Guid             `json:"sellerId,omitempty"`
+	SellerContactID     *types.Guid             `json:"sellerContactId,omitempty"`
+	DebtorID            *types.Guid             `json:"debtorId,omitempty"`
+	DebtorContactID     *types.Guid             `json:"debtorContactId,omitempty"`
+	ShipToID            *types.Guid             `json:"shipToId,omitempty"`
+	ShipToContactID     *types.Guid             `json:"shipToContactId,omitempty"`
 	LanguageISO         string                  `json:"languageIso,omitempty"`
 	CurrencyISO         string                  `json:"currencyIso,omitempty"`
 	Synced              bool                    `json:"synced,omitempty"`
 	QuotationNumber     int64                   `json:"quotationNumber,omitempty"`
 	VersionNumber       int32                   `json:"versionNumber,omitempty"`
 	Status              *string                 `json:"status,omitempty"`
-	StatusID            *types.GUID             `json:"statusId,omitempty"`
+	StatusID            *types.Guid             `json:"statusId,omitempty"`
 	Subject             *string                 `json:"subject,omitempty"`
 	TotalPrice          float64                 `json:"totalPrice,omitempty"`
 	IsVerified          *bool                   `json:"isVerified,omitempty"`
@@ -41,13 +41,13 @@ type Quotation struct {
 	Deliverydate        *e_types.DateTimeString `json:"deliverydate,omitempty"`
 	Remarks             *string                 `json:"remarks,omitempty"`
 	ExpiresDate         *e_types.DateTimeString `json:"expiresDate,omitempty"`
-	QuotationTemplateID *types.GUID             `json:"quotationTemplateId,omitempty"`
-	ID                  types.GUID              `json:"id,omitempty"`
+	QuotationTemplateID *types.Guid             `json:"quotationTemplateId,omitempty"`
+	ID                  types.Guid              `json:"id,omitempty"`
 	CreatedDate         e_types.DateTimeString  `json:"createdDate,omitempty"`
 	UpdatedDate         e_types.DateTimeString  `json:"updatedDate,omitempty"`
-	OrganizationID      *types.GUID             `json:"organizationId,omitempty"`
+	OrganizationID      *types.Guid             `json:"organizationId,omitempty"`
 	Reference           *string                 `json:"reference,omitempty"`
-	CreatorID           types.GUID              `json:"creatorId,omitempty"`
+	CreatorID           types.Guid              `json:"creatorId,omitempty"`
 	CustomField1        *string                 `json:"customField1,omitempty"`
 	CustomField2        *string                 `json:"customField2,omitempty"`
 	CustomField3        *string                 `json:"customField3,omitempty"`
@@ -107,7 +107,7 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 		quotationsResponse := QuotationsResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &quotationsResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)
@@ -127,12 +127,12 @@ func (service *Service) GetQuotations(params *GetQuotationsParams) (*[]Quotation
 	return &quotations, nil
 }
 
-func (service *Service) UpdateQuotation(quotationID types.GUID, quotationUpdate *Quotation) *errortools.Error {
+func (service *Service) UpdateQuotation(quotationID types.Guid, quotationUpdate *Quotation) *errortools.Error {
 	urlPath := fmt.Sprintf("quotations(%s)", quotationID.String())
 
 	requestConfig := go_http.RequestConfig{
 		Method:    http.MethodPatch,
-		URL:       service.urlData(urlPath),
+		Url:       service.urlData(urlPath),
 		BodyModel: quotationUpdate,
 	}
 	_, _, e := service.httpRequest(&requestConfig)

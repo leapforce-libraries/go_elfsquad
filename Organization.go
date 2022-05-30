@@ -18,15 +18,15 @@ type OrganizationsResponse struct {
 
 type Organization struct {
 	Name                          string                 `json:"name"`
-	SettingsID                    types.GUID             `json:"settingsId"`
+	SettingsID                    types.Guid             `json:"settingsId"`
 	DefaultDiscountPct            float64                `json:"defaultDiscountPct"`
 	DefaultUpValuePct             float64                `json:"defaultUpValuePct"`
 	CurrencyISO                   string                 `json:"currencyIso"`
 	LanguageISO                   string                 `json:"languageIso"`
 	IsConfigurationModelPreviewer bool                   `json:"isConfigurationModelPreviewer"`
-	OrganizationTypeID            types.GUID             `json:"organizationTypeId"`
-	ID                            types.GUID             `json:"id"`
-	CreatorID                     types.GUID             `json:"creatorId"`
+	OrganizationTypeID            types.Guid             `json:"organizationTypeId"`
+	ID                            types.Guid             `json:"id"`
+	CreatorID                     types.Guid             `json:"creatorId"`
 	Reference                     string                 `json:"reference"`
 	Synced                        bool                   `json:"synced"`
 	Inactive                      bool                   `json:"inactive"`
@@ -48,7 +48,7 @@ func (service *Service) GetOrganizations() (*[]Organization, *errortools.Error) 
 		organizationsResponse := OrganizationsResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &organizationsResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

@@ -21,11 +21,11 @@ type QuotationProperty struct {
 	IsReadonly     bool       `json:"isReadonly"`
 	Type           *string    `json:"type"`
 	Order          int32      `json:"order"`
-	ID             types.GUID `json:"id"`
+	ID             types.Guid `json:"id"`
 	CreatedDate    string     `json:"createdDate"`
 	UpdatedDate    string     `json:"updatedDate"`
-	OrganizationID types.GUID `json:"organizationId"`
-	CreatorID      types.GUID `json:"creatorId"`
+	OrganizationID types.Guid `json:"organizationId"`
+	CreatorID      types.Guid `json:"creatorId"`
 	CustomField1   string     `json:"customField1"`
 	CustomField2   string     `json:"customField2"`
 	CustomField3   string     `json:"customField3"`
@@ -47,7 +47,7 @@ func (service *Service) GetQuotationProperties() (*[]QuotationProperty, *errorto
 		quotationPropertiesResponse := QuotationPropertiesResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &quotationPropertiesResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

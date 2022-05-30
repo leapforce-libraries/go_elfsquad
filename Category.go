@@ -18,13 +18,13 @@ type CategoriesResponse struct {
 
 type Category struct {
 	Name           string                 `json:"name"`
-	ParentID       types.GUID             `json:"parentId"`
+	ParentID       types.Guid             `json:"parentId"`
 	Order          int32                  `json:"order"`
-	ID             types.GUID             `json:"id"`
+	ID             types.Guid             `json:"id"`
 	CreatedDate    e_types.DateTimeString `json:"createdDate"`
 	UpdatedDate    e_types.DateTimeString `json:"updatedDate"`
-	OrganizationID types.GUID             `json:"organizationId"`
-	CreatorID      types.GUID             `json:"creatorId"`
+	OrganizationID types.Guid             `json:"organizationId"`
+	CreatorID      types.Guid             `json:"creatorId"`
 }
 
 func (service *Service) GetCategories() (*[]Category, *errortools.Error) {
@@ -41,7 +41,7 @@ func (service *Service) GetCategories() (*[]Category, *errortools.Error) {
 		categoriesResponse := CategoriesResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &categoriesResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

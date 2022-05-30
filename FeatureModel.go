@@ -17,7 +17,7 @@ type FeatureModelsResponse struct {
 }
 
 type FeatureModel struct {
-	RootFeatureID          types.GUID             `json:"rootFeatureId"`
+	RootFeatureID          types.Guid             `json:"rootFeatureId"`
 	Order                  int32                  `json:"order"`
 	DisplayPrices          bool                   `json:"displayPrices"`
 	HideInShowroom         bool                   `json:"hideInShowroom"`
@@ -29,8 +29,8 @@ type FeatureModel struct {
 	ForeignAttachmentNodes map[string]string      `json:"foreignAttachmentNodes"`
 	FeatureModelHash       string                 `json:"featureModelHash"`
 	PurchaseDiscount       float64                `json:"purchaseDiscount"`
-	ID                     types.GUID             `json:"id"`
-	CreatorID              types.GUID             `json:"creatorId"`
+	ID                     types.Guid             `json:"id"`
+	CreatorID              types.Guid             `json:"creatorId"`
 	Synced                 bool                   `json:"synced"`
 	Inactive               bool                   `json:"inactive"`
 	CreatedDate            e_types.DateTimeString `json:"createdDate"`
@@ -51,7 +51,7 @@ func (service *Service) GetFeatureModels() (*[]FeatureModel, *errortools.Error) 
 		featureModelsResponse := FeatureModelsResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &featureModelsResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

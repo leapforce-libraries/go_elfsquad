@@ -24,8 +24,8 @@ type CRMAccount struct {
 	City        string                 `json:"city"`
 	CountryISO  string                 `json:"countryIso"`
 	Type        json.RawMessage        `json:"type"`
-	ID          types.GUID             `json:"id"`
-	CreatorID   types.GUID             `json:"creatorId"`
+	ID          types.Guid             `json:"id"`
+	CreatorID   types.Guid             `json:"creatorId"`
 	Reference   string                 `json:"reference"`
 	Synced      bool                   `json:"synced"`
 	Inactive    bool                   `json:"inactive"`
@@ -47,7 +47,7 @@ func (service *Service) GetCRMAccounts() (*[]CRMAccount, *errortools.Error) {
 		crmAccountsResponse := CRMAccountsResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &crmAccountsResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

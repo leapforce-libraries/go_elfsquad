@@ -5,7 +5,7 @@ import (
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
-	oauth2 "github.com/leapforce-libraries/go_oauth2"
+	go_token "github.com/leapforce-libraries/go_oauth2/token"
 )
 
 // Token stures Token object
@@ -15,7 +15,7 @@ type AccessToken struct {
 	ExpiresIn   int    `json:"expiresIn"`
 }
 
-func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
+func (service *Service) GetAccessToken() (*go_token.Token, *errortools.Error) {
 	body := struct {
 		ClientID string `json:"clientId"`
 		Secret   string `json:"secret"`
@@ -28,7 +28,7 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 
 	requestConfig := go_http.RequestConfig{
 		Method:        accessTokenMethod,
-		URL:           accessTokenURL,
+		Url:           accessTokenURL,
 		BodyModel:     body,
 		ResponseModel: &accessToken,
 	}
@@ -41,7 +41,7 @@ func (service *Service) GetAccessToken() (*oauth2.Token, *errortools.Error) {
 	expiresIn, _ := json.Marshal(accessToken.ExpiresIn / 1000)
 	expiresInJSON := json.RawMessage(expiresIn)
 
-	token := oauth2.Token{
+	token := go_token.Token{
 		AccessToken: &accessToken.AccessToken,
 		ExpiresIn:   &expiresInJSON,
 	}

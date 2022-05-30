@@ -17,25 +17,25 @@ type QuotationLinesResponse struct {
 }
 
 type QuotationLine struct {
-	QuotationID                     types.GUID              `json:"quotationId"`
+	QuotationID                     types.Guid              `json:"quotationId"`
 	LineNumber                      int32                   `json:"lineNumber"`
 	ArticleCode                     *string                 `json:"articleCode"`
 	DeliveryDate                    *e_types.DateTimeString `json:"deliverydate"`
 	Description                     string                  `json:"description"`
-	FeatureID                       types.GUID              `json:"featureId"`
-	FeatureModelNodeID              types.GUID              `json:"featureModelNodeId"`
+	FeatureID                       types.Guid              `json:"featureId"`
+	FeatureModelNodeID              types.Guid              `json:"featureModelNodeId"`
 	Quantity                        float64                 `json:"quantity"`
 	ImageValue                      *string                 `json:"imageValue"`
 	TextValue                       *string                 `json:"textValue"`
-	ParentLineID                    *types.GUID             `json:"parentLineId"`
+	ParentLineID                    *types.Guid             `json:"parentLineId"`
 	GroupedRootLine                 bool                    `json:"groupedRootLine"`
-	GroupID                         *types.GUID             `json:"groupId"`
-	ParentGroupID                   *types.GUID             `json:"parentGroupId"`
+	GroupID                         *types.Guid             `json:"groupId"`
+	ParentGroupID                   *types.Guid             `json:"parentGroupId"`
 	GroupOrder                      int32                   `json:"groupOrder"`
 	GroupTitle                      *string                 `json:"groupTitle"`
 	AddedFromConfiguration          bool                    `json:"addedFromConfiguration"`
-	ConfigurationID                 *types.GUID             `json:"configurationId"`
-	VatID                           *types.GUID             `json:"vatId"`
+	ConfigurationID                 *types.Guid             `json:"configurationId"`
+	VatID                           *types.Guid             `json:"vatId"`
 	DiscountPct                     float64                 `json:"discountPct"`
 	MarginPct                       float64                 `json:"marginPct"`
 	PurchasePriceDiscountPct        float64                 `json:"purchasePriceDiscountPct"`
@@ -43,12 +43,12 @@ type QuotationLine struct {
 	DefaultPurchasePriceDiscountPct float64                 `json:"defaultPurchasePriceDiscountPct"`
 	UnitPrice                       float64                 `json:"unitPrice"`
 	OriginalUnitPrice               float64                 `json:"originalUnitPrice"`
-	ID                              types.GUID              `json:"id"`
+	ID                              types.Guid              `json:"id"`
 	CreatedDate                     e_types.DateTimeString  `json:"createdDate"`
 	UpdatedDate                     e_types.DateTimeString  `json:"updatedDate"`
-	OrganizationID                  *types.GUID             `json:"organizationId"`
+	OrganizationID                  *types.Guid             `json:"organizationId"`
 	Reference                       *string                 `json:"reference"`
-	CreatorID                       types.GUID              `json:"creatorId"`
+	CreatorID                       types.Guid              `json:"creatorId"`
 	CustomField1                    *string                 `json:"customField1"`
 	CustomField2                    *string                 `json:"customField2"`
 	CustomField3                    *string                 `json:"customField3"`
@@ -70,7 +70,7 @@ func (service *Service) GetQuotationLines() (*[]QuotationLine, *errortools.Error
 		quotationLinesResponse := QuotationLinesResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &quotationLinesResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

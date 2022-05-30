@@ -17,8 +17,8 @@ type FeatureModelNodesResponse struct {
 }
 
 type FeatureModelNode struct {
-	FeatureModelID               types.GUID             `json:"featureModelId"`
-	FeatureID                    types.GUID             `json:"featureId"`
+	FeatureModelID               types.Guid             `json:"featureModelId"`
+	FeatureID                    types.Guid             `json:"featureId"`
 	HideInQuotation              bool                   `json:"hideInQuotation"`
 	HideInConfigurator           bool                   `json:"hideInConfigurator"`
 	HideInOrderEntry             bool                   `json:"hideInOrderEntry"`
@@ -36,8 +36,8 @@ type FeatureModelNode struct {
 	UnitPriceExVATLabel          float64                `json:"unitPriceExVATLabel"`
 	TotalPriceIncVATLabel        float64                `json:"totalPriceIncVATLabel"`
 	TotalPriceExVATLabel         float64                `json:"totalPriceExVATLabel"`
-	ID                           types.GUID             `json:"id"`
-	CreatorID                    types.GUID             `json:"creatorId"`
+	ID                           types.Guid             `json:"id"`
+	CreatorID                    types.Guid             `json:"creatorId"`
 	Synced                       bool                   `json:"synced"`
 	Inactive                     bool                   `json:"inactive"`
 	CreatedDate                  e_types.DateTimeString `json:"createdDate"`
@@ -58,7 +58,7 @@ func (service *Service) GetFeatureModelNodes() (*[]FeatureModelNode, *errortools
 		featureModelNodesResponse := FeatureModelNodesResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &featureModelNodesResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)

@@ -17,12 +17,12 @@ import (
 
 type QuotationTemplate struct {
 	Name                  string                 `json:"name"`
-	URL                   string                 `json:"url"`
+	Url                   string                 `json:"url"`
 	IsDefault             bool                   `json:"isDefault"`
 	LanguageISO           string                 `json:"languageIso"`
 	TenantDefaultLanguage string                 `json:"tenantDefaultLanguage"`
-	ID                    types.GUID             `json:"id"`
-	CreatorID             types.GUID             `json:"creatorId"`
+	ID                    types.Guid             `json:"id"`
+	CreatorID             types.Guid             `json:"creatorId"`
 	Synced                bool                   `json:"synced"`
 	Inactive              bool                   `json:"inactive"`
 	CreatedDate           e_types.DateTimeString `json:"createdDate"`
@@ -36,7 +36,7 @@ func (service *Service) GetQuotationTemplates() (*[]QuotationTemplate, *errortoo
 
 	requestConfig := go_http.RequestConfig{
 		Method:        http.MethodGet,
-		URL:           service.url(urlPath),
+		Url:           service.url(urlPath),
 		ResponseModel: &quotationTemplates,
 	}
 	_, _, e := service.httpRequest(&requestConfig)

@@ -21,14 +21,14 @@ type Configuration struct {
 	CurrencyISO         string                 `json:"currencyIso"`
 	LanguageISO         string                 `json:"languageIso"`
 	Preview             bool                   `json:"preview"`
-	FeatureModelID      types.GUID             `json:"featureModelId"`
+	FeatureModelID      types.Guid             `json:"featureModelId"`
 	FeatureModelVersion int32                  `json:"featureModelVersion"`
-	ID                  types.GUID             `json:"id"`
+	ID                  types.Guid             `json:"id"`
 	CreatedDate         e_types.DateTimeString `json:"createdDate"`
 	UpdatedDate         e_types.DateTimeString `json:"updatedDate"`
-	OrganizationID      *types.GUID            `json:"organizationId"`
+	OrganizationID      *types.Guid            `json:"organizationId"`
 	Reference           *string                `json:"reference"`
-	CreatorID           types.GUID             `json:"creatorId"`
+	CreatorID           types.Guid             `json:"creatorId"`
 	CustomField1        *string                `json:"customField1"`
 	CustomField2        *string                `json:"customField2"`
 	CustomField3        *string                `json:"customField3"`
@@ -50,7 +50,7 @@ func (service *Service) GetConfigurations() (*[]Configuration, *errortools.Error
 		configurationsResponse := ConfigurationsResponse{}
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodGet,
-			URL:           service.urlData(urlPath),
+			Url:           service.urlData(urlPath),
 			ResponseModel: &configurationsResponse,
 		}
 		_, _, e := service.httpRequest(&requestConfig)
