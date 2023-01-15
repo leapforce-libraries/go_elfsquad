@@ -1,6 +1,7 @@
 package elfsquad
 
 import (
+	"encoding/json"
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_token "github.com/leapforce-libraries/go_oauth2/token"
 )
@@ -44,4 +45,14 @@ func (t *TokenSource) RetrieveToken() *errortools.Error {
 
 func (t *TokenSource) SaveToken() *errortools.Error {
 	return nil
+}
+
+func (m *TokenSource) UnmarshalToken(b []byte) (*go_token.Token, *errortools.Error) {
+	var token go_token.Token
+
+	err := json.Unmarshal(b, &token)
+	if err != nil {
+		return nil, errortools.ErrorMessage(err)
+	}
+	return &token, nil
 }
